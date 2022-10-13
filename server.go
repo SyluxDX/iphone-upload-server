@@ -14,7 +14,6 @@ import (
 )
 
 type confimation struct {
-	Name  string
 	Lines []string
 }
 
@@ -23,34 +22,41 @@ var (
 	Configs utils.Configurations
 )
 
-func uploadFile(w http.ResponseWriter, r *http.Request) {
-	r.ParseMultipartForm(32 << 20)
-	file, _, err := r.FormFile("myFile")
-	if err != nil {
-		log.Println(err)
-		fmt.Fprintf(w, "File Not found")
+func uploadFiles(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseMultipartForm(32 << 20); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	defer file.Close()
-	// Create a temporary file
-	tempFile, err := os.CreateTemp("temp", "*.upload")
-	if err != nil {
-		log.Println(err)
-	}
-	defer tempFile.Close()
-	// read all of the contents of our uploaded file into a byte array
-	fileBytes, err := io.ReadAll(file)
-	if err != nil {
-		log.Println(err)
-	}
-	// write this byte array to our temporary file
-	tempFile.Write(fileBytes)
+	files := r.MultipartForm.File["myFiles"]
 
-	// request Confirmation page
-	confirm := confimation{tempFile.Name(), []string{}}
-	// check uploaded file
-	confirm.Lines = utils.ParseUpload(fileBytes)
+	uploadedFiles := []string{}
+	for _, fileHeader := range files {
+		// open file
+		buffFile, err := fileHeader.Open()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		defer buffFile.Close()
 
+		uploadFile, err := os.Create(filepath.Join("upload", fileHeader.Filename))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		defer uploadFile.Close()
+
+		_, err = io.Copy(uploadFile, buffFile)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		uploadedFiles = append(uploadedFiles, fileHeader.Filename)
+	}
+	// present confirmation page
+	confirm := confimation{Lines: uploadedFiles}
 	template, err := template.ParseFiles("html/confirm.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -60,15 +66,6 @@ func uploadFile(w http.ResponseWriter, r *http.Request) {
 	if err := template.Execute(w, confirm); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-}
-
-func processFile(w http.ResponseWriter, r *http.Request) {
-	path := r.FormValue("filename")
-	filename := filepath.Base(path)
-	// move file to upload folder
-	os.Rename(path, filepath.Join("upload", filename))
-	// Serve final page
-	http.ServeFile(w, r, "html/thankyou.html")
 }
 
 func getSelfIP(configIP string) string {
@@ -88,8 +85,7 @@ func setupRoutes() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "html/upload.html")
 	})
-	http.HandleFunc("/confirm", uploadFile)
-	http.HandleFunc("/thankyou", processFile)
+	http.HandleFunc("/confirm", uploadFiles)
 
 	log.Printf("Serving on %[1]s port %[2]d (http://%[1]s:%[2]d/)\n", getSelfIP(Configs.ServerURL), Configs.ServerPort)
 	http.ListenAndServe(fmt.Sprintf("%s:%d", Configs.ServerURL, Configs.ServerPort), nil)

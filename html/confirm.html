@@ -2,41 +2,41 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Upload Confirmation</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Upload Confirmation</title>
 </head>
 <style>
-    html {
-        background-color: #bebebe;
-        height: 100%;
-    }
+	html {
+		background-color: #bebebe;
+		height: 100%;
+	}
 
-    body {
-        font-family: 'Montserrat', Arial, Helvetica, sans-serif;
-    }
+	body {
+		font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+	}
 
-    #form-main {
-        width: 100%;
-        float: left;
-        padding-top: 0px;
-    }
+	#form-main {
+		width: 100%;
+		float: left;
+		padding-top: 0px;
+	}
 
-    #form-div {
-        background-color: #48484866;
-        padding-left: 35px;
-        padding-right: 35px;
-        padding-top: 35px;
-        padding-bottom: 50px;
-        width: 450px;
-        float: left;
-        left: 50%;
-        position: absolute;
-        margin-top: 30px;
-        margin-left: -260px;
-        border-radius: 7px;
-    }
+	#form-div {
+		background-color: #48484866;
+		padding-left: 35px;
+		padding-right: 35px;
+		padding-top: 35px;
+		padding-bottom: 50px;
+		width: 450px;
+		float: left;
+		left: 50%;
+		position: absolute;
+		margin-top: 30px;
+		margin-left: -260px;
+		border-radius: 7px;
+	}
 
 	table {
 		font-family: Arial, Helvetica, sans-serif;
@@ -51,13 +51,13 @@
 		padding: 8px;
 	}
 	
-    tr:nth-child(even) {
-        background-color: #e5e9ff;
-    }
+	tr:nth-child(even) {
+		background-color: #e5e9ff;
+	}
 
-    .submit {
-        text-align: center;
-    }
+	.submit {
+		text-align: center;
+	}
 	
 	.text {
 		font-family: 'Montserrat', Arial, Helvetica, sans-serif;
@@ -65,44 +65,43 @@
 		font-size: 20px;
 	}
 
-    .button-blue {
-        font-family: 'Montserrat', Arial, Helvetica, sans-serif;
-        width: 80%;
-        border: #fbfbfb solid 4px;
-        cursor: pointer;
-        background-color: #3498db;
-        color: white;
-        font-size: 24px;
-        padding-top: 22px;
-        padding-bottom: 22px;
-        transition: all 0.3s;
-        margin-top: -4px;
-        font-weight: 700;
-    }
+	.button-blue {
+		font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+		width: 80%;
+		border: #fbfbfb solid 4px;
+		cursor: pointer;
+		background-color: #3498db;
+		color: white;
+		font-size: 24px;
+		padding-top: 22px;
+		padding-bottom: 22px;
+		transition: all 0.3s;
+		margin-top: -4px;
+		font-weight: 700;
+	}
 
-    .button-blue:hover {
-        background-color: #37a4ed;
-    }
+	.button-blue:hover {
+		background-color: #37a4ed;
+	}
 
-    @media only screen and (max-width: 580px) {
-        #form-div {
-            left: 3%;
-            margin-right: 3%;
-            width: 88%;
-            margin-left: 0;
-            padding-left: 3%;
-            padding-right: 3%;
-        }
-    }
+	@media only screen and (max-width: 580px) {
+		#form-div {
+			left: 3%;
+			margin-right: 3%;
+			width: 88%;
+			margin-left: 0;
+			padding-left: 3%;
+			padding-right: 3%;
+		}
+	}
 </style>
 
 <body>
-    <div class="container">
-        <div id="form-main">
-            <div id="form-div">
-                <form class="montform" id="reused_form" action="thankyou" method="post">
-                    <input type="hidden" id="filename" name="filename" value={{.Name}}>
-					<p class="text"><strong>Please confirm the uploaded file</strong></p>
+	<div class="container">
+		<div id="form-main">
+			<div id="form-div">
+				<form class="montform" id="reused_form" action="/" method="post">
+					<p class="text"><strong>Files Uploaded</strong></p>
 					<p>
 						<table>
 							{{range .Lines}}
@@ -110,13 +109,13 @@
 							{{end}}
 						</table>
 					</p>
-                    <div class="submit">
-                        <button type="submit" class="button-blue">Confirm</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+					<div class="submit">
+						<button type="submit" class="button-blue">Return to Home</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>
